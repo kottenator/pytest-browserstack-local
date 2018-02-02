@@ -9,3 +9,7 @@ def test_remote(httpserver, selenium):
 
     assert heading
     assert heading.text == "Hello, World!"
+
+
+def test_process(browserstack_local_process):
+    assert browserstack_local_process

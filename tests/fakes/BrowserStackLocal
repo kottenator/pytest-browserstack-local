@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+sleep 1
+printf "BrowserStackLocal v0.0-fake\n\n"
+sleep 1
+printf "You can now access your local server(s) in our remote browser.\n\n"
+sleep 0.5
+printf "Press Ctrl-C to exit\n"
+while true; do sleep 86400; done
