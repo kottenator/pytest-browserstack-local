@@ -11,5 +11,6 @@ def test_remote(httpserver, selenium):
     assert heading.text == "Hello, World!"
 
 
-def test_process(browserstack_local_process):
-    assert browserstack_local_process
+def test_process(browserstack_local):
+    print(browserstack_local)
+    assert browserstack_local['process'] or browserstack_local['daemon']

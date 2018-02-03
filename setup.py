@@ -16,8 +16,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     install_requires=[
-        'pytest>=3.0',
-        'pytest-variables>=1.5.0'
+        'pytest>=3.0'
     ],
     extras_require={
         'test': [

@@ -1,5 +1,7 @@
 import pytest
-from subprocess import Popen
+
+from .process import start_daemon, start_process, stop_process
+from .utils import parse_config
 
 
 def pytest_addoption(parser):
@@ -12,30 +14,58 @@ def pytest_addoption(parser):
     group.addoption(
         '--browserstack-local-path',
         default='BrowserStackLocal',
-        help='Path to BrowserStackLocal binary.'
+        help=(
+            'Path to BrowserStackLocal binary. '
+            'Default: BrowserStackLocal (i.e. it should be in PATH).'
+        )
+    )
+    group.addoption(
+        '--browserstack-local-argument',
+        action='append',
+        default=[],
+        dest='browserstack_local_arguments',
+        help=(
+            'BrowserStackLocal argument in a form: '
+            '--browserstack-local-argument localIdentifier=12345. Can be set multiple times.'
+        )
     )
 
 
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config):
     if config.getoption('browserstack_local'):
-        browserstack_local_path = config.getoption('browserstack_local_path')
-        browserstack_local_config = config._variables.get('BrowserStackLocal', {})
-        config._browserstack_local_config = browserstack_local_config
-        print("Starting BrowserStackLocal ...")
-        config._browserstack_local_process = Popen([browserstack_local_path])
+        browserstack_local_cmd = parse_config(config)
+        config._browserstack_local_cmd = browserstack_local_cmd
+
+        if '--daemon' in browserstack_local_cmd:
+            config._browserstack_local_daemon = start_daemon(browserstack_local_cmd)
+        else:
+            config._browserstack_local_process = start_process(browserstack_local_cmd)
 
 
 def pytest_unconfigure(config):
     browserstack_local_process = getattr(config, '_browserstack_local_process', None)
 
     if browserstack_local_process:
-        print("Stopping BrowserStackLocal ...")
-        browserstack_local_process.kill()
-        browserstack_local_process.communicate()
+        print("Stopping BrowserStackLocal process ...")
+        stop_process(browserstack_local_process.pid)
         del config._browserstack_local_process
+
+    browserstack_local_daemon = getattr(config, '_browserstack_local_daemon', None)
+
+    if browserstack_local_daemon:
+        print("Stopping BrowserStackLocal daemon ...")
+        stop_process(browserstack_local_daemon['pid'])
+        del config._browserstack_local_daemon
 
 
 @pytest.fixture
-def browserstack_local_process(request):
-    return getattr(request.config, '_browserstack_local_process', None)
+def browserstack_local(request):
+    config = request.config
+
+    if config.getoption('browserstack_local'):
+        return {
+            'process': getattr(config, '_browserstack_local_process', None),
+            'daemon': getattr(config, '_browserstack_local_daemon', None),
+            'cmd': config._browserstack_local_cmd
+        }
