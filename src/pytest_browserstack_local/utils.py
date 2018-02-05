@@ -71,7 +71,6 @@ def parse_config(config):
         browserstack_local_config[convert_to_arg(key)] = value
 
     if BROWSERSTACK_ACCESS_KEY_ENV_VAR in os.environ:
-        browserstack_local_config.pop('-k', None)
         browserstack_local_config['--key'] = os.getenv(BROWSERSTACK_ACCESS_KEY_ENV_VAR)
 
     # CLI arguments override ``pytest-variables``.

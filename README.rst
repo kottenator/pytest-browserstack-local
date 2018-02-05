@@ -69,8 +69,6 @@ CLI arguments
 
   - ``--browserstack-local-argument local-identifier=ABC123``
   - ``--browserstack-local-argument localIdentifier=ABC123``
-  - ``--browserstack-local-argument key=XYZ``
-  - ``--browserstack-local-argument k=XYZ``
 
   And for *boolean arguments* (aka "flags") use one of the following formats:
 
@@ -119,8 +117,6 @@ You can use any of the following formats for *keys* in the config file:
 
 - ``local-identifier``
 - ``localIdentifier``
-- ``key``
-- ``k``
 
 See all the possible arguments in `BrowserStackLocal docs
 <https://www.browserstack.com/local-testing#configuration>`_

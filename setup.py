@@ -21,6 +21,7 @@ setup(
     ],
     extras_require={
         'test': [
+            'flake8~=3.5',
             'pytest-selenium~=1.11',
             'pytest-localserver~=0.4',
         ]
