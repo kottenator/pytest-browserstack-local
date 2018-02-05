@@ -46,7 +46,7 @@ def start_process(cmd):
     Monitor its output to find a specific text that indicates that the process has
     successfully established connection to BrowserStack server and ready to serve.
 
-    Credits to https://stackoverflow.com/questions/10756383.
+    Credits to https://stackoverflow.com/questions/10756383
 
     :param list[str] cmd:
     :rtype: subprocess.Popen | None
