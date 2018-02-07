@@ -29,6 +29,7 @@ def start_daemon(cmd):
     try:
         out, err = process.communicate(timeout=TIMEOUT)
     except TimeoutExpired:
+        print("Error: timeout ({:d} sec).".format(TIMEOUT))
         stop_process(process.pid)
     else:
         if err:
@@ -81,7 +82,7 @@ def start_process(cmd):
         return process
     else:
         if time.time() - start_time >= TIMEOUT:
-            print(' Failed on timeout ({:d} sec).'.format(TIMEOUT), flush=True)
+            print(' Timeout ({:d} sec).'.format(TIMEOUT), flush=True)
         print('Terminating the process ...', flush=True)
         stop_process(process.pid)
 

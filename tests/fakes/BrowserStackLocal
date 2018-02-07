@@ -1,9 +1,107 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-sleep 1
-printf "BrowserStackLocal v0.0-fake\n\n"
-sleep 1
-printf "You can now access your local server(s) in our remote browser.\n\n"
-sleep 0.5
-printf "Press Ctrl-C to exit\n"
-while true; do sleep 86400; done
+import argparse
+import os
+import subprocess
+import time
+
+import sys
+from subprocess import Popen, PIPE
+
+FAKE_ACCESS_KEY = '123'
+
+
+def run_daemon(key, daemon, local_identifier_lock):
+    if key != FAKE_ACCESS_KEY:
+        print(
+            '{"state":"disconnected","pid":12345,"message":{"genre":"error","message":'
+            '"You provided an invalid key"}}', file=sys.stderr,
+        )
+        return
+
+    if daemon == 'start':
+        if os.path.exists(local_identifier_lock):
+            print(
+                '{"state":"disconnected","pid":12345,"message":{"genre":"error","message":'
+                '"Either another browserstack local client is running on your machine or some '
+                'server is listening on port 45691"}}'
+            )
+        else:
+            with open(local_identifier_lock, 'w') as f:
+                f.write('Fake BrowserStackLocal lock')
+
+            p = Popen(['sleep', '60'], stdout=PIPE, stderr=PIPE)
+            print('{{"state":"connected","pid":{},"message":"Connected"}}'.format(p.pid))
+    elif daemon == 'stop':
+        if os.path.exists(local_identifier_lock):
+            os.remove(local_identifier_lock)
+            print('{"status":"success","message":"BrowserStackLocal stopped successfully"}')
+        else:
+            print('{"status":"success","message":"BrowserStackLocal process instance not found"}')
+
+
+def run_process(key, local_identifier_lock, parser):
+    time.sleep(1)
+    print("BrowserStackLocal v0.0-fake\n", flush=True)
+
+    if key == FAKE_ACCESS_KEY:
+        if os.path.exists(local_identifier_lock):
+            os.remove(local_identifier_lock)
+
+        time.sleep(1)
+
+        with open(local_identifier_lock, 'w') as f:
+            f.write("Fake BrowserStackLocal lock")
+
+        print("You can now access your local server(s) in our remote browser.\n", flush=True)
+        time.sleep(0.5)
+        print("Press Ctrl-C to exit\n", flush=True)
+
+        while True:
+            try:
+                time.sleep(0.5)
+
+                if not os.path.exists(local_identifier_lock):
+                    print("Multiple binaries spawned with same configuration. Closing older one.")
+                    break
+            except KeyboardInterrupt:
+                break
+
+    else:
+        print(" *** Error: You provided an invalid key\n")
+        parser.print_help()
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Fake BrowserStackLocal for test purposes.')
+    parser.add_argument('--key', required=True, help=(
+        "Browserstack Access Key. This information is available in the local testing section "
+        "of the Settings page: https://www.browserstack.com/accounts/settings"
+    ))
+    parser.add_argument('--daemon', choices=['start', 'stop'], help=(
+        "Starts or stop the binary as a daemon. Accepts only 2 commands: start, stop. Start "
+        "will start binary in background. Primarily used in Continous Integration server scripts"
+    ))
+    parser.add_argument('--local-identifier', default='default', help=(
+        "If you are running multiple copies of BrowserStackLocal binary (for better performance "
+        "or other reasons), please specify unique strings for BrowserStack to uniquely identify "
+        "them. You will need to specify the same string in Automate tests as well."
+    ))
+    args = parser.parse_args()
+
+    # Parsed args
+    key = args.key
+    daemon = args.daemon
+    local_identifier = args.local_identifier
+    local_identifier_lock = 'browserstack-local-identifier-{}.lock'.format(local_identifier)
+
+    if daemon:
+        # handle daemon (background process)
+        run_daemon(key, daemon, local_identifier_lock)
+    else:
+        # no daemon (foreground process)
+        run_process(key, local_identifier_lock, parser)
+
+
+if __name__ == '__main__':
+    main()
