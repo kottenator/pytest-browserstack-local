@@ -1,5 +1,8 @@
 *.pyc
 
+# Test generated data
+/tests/run/
+
 # Distribution / packaging
 /.eggs/
 /sdist/
