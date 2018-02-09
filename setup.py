@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytest-browserstack-local',
-    version='0.0.1.dev1',
+    version='0.5.0a1',
     description='``py.test`` plugin to run ``BrowserStackLocal`` in background.',
     long_description=(
         'May be useful for Continuous Integration. '
@@ -23,12 +23,12 @@ setup(
         'test': [
             'flake8~=3.5',
             'pytest-selenium~=1.11',
-            'pytest-localserver~=0.4',
+            'pytest-localserver~=0.4'
         ]
     },
     entry_points={
         'pytest11': [
-            'browserstack_local = pytest_browserstack_local.plugin',
+            'browserstack_local = pytest_browserstack_local.plugin'
         ]
     },
     classifiers=[
@@ -37,7 +37,6 @@ setup(
         'Topic :: Software Development :: Testing',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3'
     ]
 )

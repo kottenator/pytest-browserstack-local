@@ -155,3 +155,39 @@ Fixtures
             },
             'cmd': ['BrowserStackLocal', '--key', '<secret-key>', '--daemon', 'start']
         }
+
+Development
+-----------
+
+- Make a fork (if you're not me).
+- Checkout the repo.
+- Create a virtualenv.
+- ``pip install -e '.[test]'``
+- Do your changes.
+- ``py.test``
+- Make a pull-request ;)
+
+I'm always open for great ideas, but even more - for contribution.
+
+Run a real test
+~~~~~~~~~~~~~~~
+
+If you want to try it *for real*: download & install `BrowserStackLocal
+<https://www.browserstack.com/automate/python#setting-local-tunnel>`_ and then run:
+
+.. code-block:: bash
+
+    export BROWSERSTACK_USERNAME="<secret-name>"
+    export BROWSERSTACK_ACCESS_KEY="<secret-key>"
+
+    py.test -m sensitive \
+        --driver BrowserStack \
+        --capability os Windows \
+        --capability os_version 10 \
+        --capability browser IE \
+        --capability browserstack.local True \
+        --browserstack-local \
+        --browserstack-local-path ./BrowserStackLocal
+
+This will run a *hidden* Selenium test that runs real ``BrowserStackLocal`` and checks
+a ``localhost``-hosted page on BrowserStack.
