@@ -2,13 +2,15 @@
 
 import argparse
 import os
-import subprocess
 import time
 
 import sys
 from subprocess import Popen, PIPE
 
+
 FAKE_ACCESS_KEY = '123'
+TEST_DIR = os.path.dirname(os.path.dirname(__file__))
+RUN_DIR = os.path.join(TEST_DIR, 'run')
 
 
 def run_daemon(key, daemon, local_identifier_lock):
@@ -93,7 +95,13 @@ def main():
     key = args.key
     daemon = args.daemon
     local_identifier = args.local_identifier
-    local_identifier_lock = 'browserstack-local-identifier-{}.lock'.format(local_identifier)
+    local_identifier_lock = os.path.join(
+        RUN_DIR,
+        'browserstack-local-identifier-{}.lock'.format(local_identifier)
+    )
+
+    if not os.path.exists(RUN_DIR):
+        os.mkdir(RUN_DIR)
 
     if daemon:
         # handle daemon (background process)
