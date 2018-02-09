@@ -1,7 +1,8 @@
 pytest-browserstack-local
 =========================
 
-.. image:: https://user-images.githubusercontent.com/371674/36011773-9e853f2e-0d27-11e8-9226-9c5747041e80.png
+.. image:: https://user-images.githubusercontent.com/371674/36011905-7c6e2530-0d28-11e8-9fe7-b4613c1ea942.png
+   :width: 512px
    :height: 100px
 
 ``py.test`` plugin to run ``BrowserStackLocal`` in background during the test session.
