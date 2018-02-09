@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytest-browserstack-local',
-    version='0.5.0a1',
+    version='0.5.0',
     description='``py.test`` plugin to run ``BrowserStackLocal`` in background.',
     long_description=(
         'May be useful for Continuous Integration. '
