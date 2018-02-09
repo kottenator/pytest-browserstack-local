@@ -1,8 +1,8 @@
 pytest-browserstack-local
 =========================
 
-.. image:: https://travis-ci.org/kottenator/pytest-browserstack-local.svg?branch=develop
-   :target: https://travis-ci.org/kottenator/pytest-browserstack-local
+    .. image:: https://travis-ci.org/kottenator/pytest-browserstack-local.svg?branch=develop
+       :target: https://travis-ci.org/kottenator/pytest-browserstack-local
 
 .. raw:: html
 
