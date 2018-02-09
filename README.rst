@@ -40,10 +40,9 @@ Now run your tests in BrowserStack:
 
 .. code-block :: bash
 
-    export BROWSERSTACK_USERNAME="<secret-name>"  # used by ``pytest-selenium``
+    export BROWSERSTACK_USERNAME="<secret-name>"   # used by ``pytest-selenium``
     export BROWSERSTACK_ACCESS_KEY="<secret-key>"  # used by ``pytest-selenium``
                                                    # and by ``pytest-browserstack-local``
-
     py.test tests/test_home_page.py \
         --driver BrowserStack \
         --capability os Windows \
